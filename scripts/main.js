@@ -9,7 +9,6 @@ Hooks.on("ready", function() {
 });
 
 var combatVar;
-if(game.user.isGM) {
 
 Hooks.on("createCombatant", function(){
   console.log("createCombatant called.");
@@ -52,7 +51,5 @@ function addImpulses(){
 }
 
 function setPrevActorInit(){
-
-}
 
 }
