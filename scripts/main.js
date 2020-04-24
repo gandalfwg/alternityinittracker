@@ -14,7 +14,6 @@ Hooks.on("createCombatant", function() {
 
 Hooks.on("nextTurn", function() {
   console.log("nextTurn called.");
-  createNextTurnDialog();
 });
 
 function setNewCombatantInit() {
