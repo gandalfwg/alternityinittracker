@@ -12,8 +12,10 @@ Hooks.on("createCombatant", function() {
   console.log("createCombatant called.");
 });
 
-Hooks.on("nextTurn", function() {
-  console.log("nextTurn called.");
+Hooks.on("updateCombat", (combat, update, options, userId) => {
+  console.log("updateCombat called.");
+
+  const turnUpdate = !!getProperty(update, "turn");
 });
 
 function setNewCombatantInit() {
