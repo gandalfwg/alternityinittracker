@@ -12,14 +12,14 @@ Hooks.on("createCombatant", function() {
   console.log("createCombatant called.");
 });
 
-function setNewCombatantInit() {
-  var newCombatant = combatVar.combantants[combatVar.combantants.length - 1];
-}
-
 Hooks.on("nextTurn", function() {
   console.log("nextTurn called.");
   createNextTurnDialog();
 });
+
+function setNewCombatantInit() {
+  var newCombatant = combatVar.combantants[combatVar.combantants.length - 1];
+}
 
 function createNextTurnDialog() {
   var diagDiv = document.createElement("div");
