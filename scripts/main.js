@@ -8,24 +8,20 @@ Hooks.on("ready", function() {
   console.log("This code runs once core initialization is ready and game data is available.");
 });
 
-var combatVar;
-
-Hooks.on("createCombatant", function(){
+Hooks.on("createCombatant", function() {
   console.log("createCombatant called.");
-  combatVar = this;
 });
 
 function setNewCombatantInit() {
   var newCombatant = combatVar.combantants[combatVar.combantants.length - 1];
 }
 
-Hooks.on("nextTurn", function(){
+Hooks.on("nextTurn", function() {
   console.log("nextTurn called.");
-  combatVar = this;
   createNextTurnDialog();
 });
 
-function createNextTurnDialog(){
+function createNextTurnDialog() {
   var diagDiv = document.createElement("div");
   diagDiv.id = "altinitdialog";
   diagDiv.classList += "app";
@@ -44,12 +40,14 @@ function createNextTurnDialog(){
   document.body.appendChild(diagDiv);
 }
 
-function addImpulses(){
+function addImpulses() {
   var impulseInput = document.getElementById("altinitdiagimpulse").value;
   console.log("Impulses to add: " + impulseInput.value);
   document.getElementById("altinitdialog").remove();
+  //game.combat -- active
+  //game.combats -- collection
 }
 
-function setPrevActorInit(){
+function setPrevActorInit() {
 
 }
