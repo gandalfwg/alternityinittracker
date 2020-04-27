@@ -27,7 +27,7 @@ Hooks.on("updateCombat", async (combat, update, options, userId) => {
 
   const turnUpdate = !!getProperty(update, "turn");
   const roundUpdate = !!getProperty(update, "round");
-  if(!game.users.get(userId).isGM) {
+  if(!game.user.isGM) {
     return;
   }
 
