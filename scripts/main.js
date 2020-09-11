@@ -18,7 +18,9 @@ Hooks.on("updateCombatant", (combat, combatant, update, userId) => {
   const initUpdate = !!getProperty(update, "initiative");
 
   if(initUpdate && combatant.initiative >= 1) {
-    game.combat.setInitiative(update._id, calcNewInit(update._id, -1));
+    //game.combat.setInitiative(update._id, calcNewInit(update._id, -1));
+    game.combat.setInitiative(update._id, 0);
+    createNextTurnDialog(update._id);
   }
 });
 
@@ -37,6 +39,9 @@ Hooks.on("updateCombat", async (combat, update, options, userId) => {
       updateTurn = game.combat.turns.length - 1;
     }
     if(!game.combat.turns[update.turn].initiative) {
+      return;
+    }
+    if(document.getElementById("altinitdialog") != null) {
       return;
     }
     createNextTurnDialog(game.combat.turns[updateTurn]._id);
@@ -101,24 +106,37 @@ function createNextTurnDialog(id) {
   var spanVar = document.createElement("span");
   spanVar.innerHTML = "How many Impulses to add?";
   diagDiv.appendChild(spanVar);
-  var inputVar = document.createElement("input");
-  inputVar.id = "altinitdiagimpulse";
-  inputVar.type = "text";
-  diagDiv.appendChild(inputVar);
-  var buttonVar = document.createElement("button");
-  buttonVar.type = "button";
-  buttonVar.innerHTML = "Add";
-  buttonVar.addEventListener("click", addImpulses);
-  diagDiv.appendChild(buttonVar);
+  var divVar = document.createElement("div");
+
+  var i;
+  for(i = 1; i < 17; i++) {
+    var buttonVar = document.createElement("button");
+    buttonVar.type = "button";
+    buttonVar.innerHTML = buttonVar.name = i;
+    buttonVar.addEventListener("click", addImpulses);
+    divVar.appendChild(buttonVar);
+  }
+  diagDiv.appendChild(divVar);
+  
+  //var inputVar = document.createElement("input");
+  //inputVar.id = "altinitdiagimpulse";
+  //inputVar.type = "text";
+  //diagDiv.appendChild(inputVar);
+  //var buttonVar = document.createElement("button");
+  //buttonVar.type = "button";
+  //buttonVar.innerHTML = "Add";
+  //buttonVar.addEventListener("click", addImpulses);
+  //diagDiv.appendChild(buttonVar);
   document.body.appendChild(diagDiv);
 }
 
-async function addImpulses() {
-  var impulseInputVal = document.getElementById("altinitdiagimpulse").value;
-  if(impulseInputVal == "") {
-    document.getElementById("altinitdialog").remove();
-    return;
-  }
+async function closeNextTurnDiag() {
+  document.getElementById("altinitdialog").remove();
+  return;
+}
+
+async function addImpulses(event) {
+  var impulseInputVal = event.target.name;
   var diagDiv = document.getElementById("altinitdialog");
   var turnId = diagDiv.getAttribute("data-turnId");
   var turn;
