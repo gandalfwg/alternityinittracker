@@ -44,7 +44,7 @@ Hooks.on("updateCombat", async (combat, update, options, userId) => {
     if(document.getElementById("altinitdialog") != null) {
       return;
     }
-    createNextTurnDialog(game.combat.turns[updateTurn]._id);
+    await createNextTurnDialog(game.combat.turns[updateTurn]._id);
     var currTurn = game.combat.turns[update.turn];
     var currInit = parseFloat(currTurn.initiative);
     if(currInit < -8) {
@@ -98,36 +98,81 @@ function calcNewInit(id, init) {
   return init;
 }
 
-function createNextTurnDialog(id) {
-  var diagDiv = document.createElement("div");
-  diagDiv.id = "altinitdialog";
-  diagDiv.classList += "app";
-  diagDiv.setAttribute('data-turnId', id);
-  var spanVar = document.createElement("span");
-  spanVar.innerHTML = "How many Impulses to add?";
-  diagDiv.appendChild(spanVar);
-  var divVar = document.createElement("div");
-
-  var i;
-  for(i = 1; i < 17; i++) {
-    var buttonVar = document.createElement("button");
-    buttonVar.type = "button";
-    buttonVar.innerHTML = buttonVar.name = i;
-    buttonVar.addEventListener("click", addImpulses);
-    divVar.appendChild(buttonVar);
-  }
-  diagDiv.appendChild(divVar);
-  
-  //var inputVar = document.createElement("input");
-  //inputVar.id = "altinitdiagimpulse";
-  //inputVar.type = "text";
-  //diagDiv.appendChild(inputVar);
-  //var buttonVar = document.createElement("button");
-  //buttonVar.type = "button";
-  //buttonVar.innerHTML = "Add";
-  //buttonVar.addEventListener("click", addImpulses);
-  //diagDiv.appendChild(buttonVar);
-  document.body.appendChild(diagDiv);
+async function createNextTurnDialog(id) {
+  await new Promise(resolve => {
+    new Dialog({
+      title: "Add Impulses",
+      content = "",
+      buttons: {
+        One: {
+          label: "1",
+          callback: () => resolve(this.addImpulses(1, id))
+        },
+        Two: {
+          label: "2",
+          callback: () => resolve(this.addImpulses(2, id))
+        },
+        Three: {
+          label: "3",
+          callback: () => resolve(this.addImpulses(3, id))
+        },
+        Four: {
+          label: "4",
+          callback: () => resolve(this.addImpulses(4, id))
+        },
+        Five: {
+          label: "5",
+          callback: () => resolve(this.addImpulses(5, id))
+        },
+        Six: {
+          label: "6",
+          callback: () => resolve(this.addImpulses(6, id))
+        },
+        Seven: {
+          label: "7",
+          callback: () => resolve(this.addImpulses(7, id))
+        },
+        Eight: {
+          label: "8",
+          callback: () => resolve(this.addImpulses(8, id))
+        },
+        Nine: {
+          label: "9",
+          callback: () => resolve(this.addImpulses(9, id))
+        },
+        Ten: {
+          label: "10",
+          callback: () => resolve(this.addImpulses(10, id))
+        },
+        Eleven: {
+          label: "11",
+          callback: () => resolve(this.addImpulses(11, id))
+        },
+        Twelve: {
+          label: "12",
+          callback: () => resolve(this.addImpulses(12, id))
+        },
+        Thirteen: {
+          label: "13",
+          callback: () => resolve(this.addImpulses(13, id))
+        },
+        Fourteen: {
+          label: "14",
+          callback: () => resolve(this.addImpulses(14, id))
+        },
+        Fifteen: {
+          label: "15",
+          callback: () => resolve(this.addImpulses(15, id))
+        },
+        Sixteen: {
+          label: "16",
+          callback: () => resolve(this.addImpulses(16, id))
+        }
+      },
+      default: "normal",
+      close: () => resolve(null)
+    }).render(true);
+  });
 }
 
 async function closeNextTurnDiag() {
@@ -135,10 +180,7 @@ async function closeNextTurnDiag() {
   return;
 }
 
-async function addImpulses(event) {
-  var impulseInputVal = event.target.name;
-  var diagDiv = document.getElementById("altinitdialog");
-  var turnId = diagDiv.getAttribute("data-turnId");
+async function addImpulses(impulseInputVal, turnId) {
   var turn;
   var i;
   for(i = 0; i < game.combat.turns.length; i++) {
