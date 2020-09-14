@@ -99,10 +99,11 @@ function calcNewInit(id, init) {
 }
 
 async function createNextTurnDialog(id) {
+  const html = "";
   await new Promise(resolve => {
     new Dialog({
       title: "Add Impulses",
-      content = "",
+      content = html,
       buttons: {
         One: {
           label: "1",
