@@ -38,10 +38,10 @@ Hooks.on("updateCombat", async (combat, update, options, userId) => {
     if(updateTurn < 0) {
       updateTurn = game.combat.turns.length - 1;
     }
-    if(!game.combat.turns[update.turn].initiative) {
-      return;
-    }
-    if(document.getElementById("altinitdialog") != null) {
+    //if(!game.combat.turns[update.turn].initiative) {
+    //  return;
+    //}
+    if(document.getElementsByClassName("app window-app dialog") && document.getElementsByClassName("app window-app dialog").length > 0) {
       return;
     }
     await createNextTurnDialog(game.combat.turns[updateTurn]._id);
@@ -99,14 +99,20 @@ function calcNewInit(id, init) {
 }
 
 async function createNextTurnDialog(id) {
-  const html = "";
+  if(!game.user.isGM) {
+    return;
+  }
+  if(document.getElementsByClassName("app window-app dialog") && document.getElementsByClassName("app window-app dialog").length > 0) {
+    return;
+  }
   await new Promise(resolve => {
     new Dialog({
       title: "Add Impulses",
-      content = html,
+      content: "<div class'blah'></div>",
       buttons: {
         One: {
           label: "1",
+          //icon: "one",
           callback: () => resolve(this.addImpulses(1, id))
         },
         Two: {
@@ -152,26 +158,10 @@ async function createNextTurnDialog(id) {
         Twelve: {
           label: "12",
           callback: () => resolve(this.addImpulses(12, id))
-        },
-        Thirteen: {
-          label: "13",
-          callback: () => resolve(this.addImpulses(13, id))
-        },
-        Fourteen: {
-          label: "14",
-          callback: () => resolve(this.addImpulses(14, id))
-        },
-        Fifteen: {
-          label: "15",
-          callback: () => resolve(this.addImpulses(15, id))
-        },
-        Sixteen: {
-          label: "16",
-          callback: () => resolve(this.addImpulses(16, id))
         }
       },
-      default: "normal",
-      close: () => resolve(null)
+      default: "One",
+      close: () => resolve(resolve(this.addImpulses(0, id)))
     }).render(true);
   });
 }
@@ -182,6 +172,10 @@ async function closeNextTurnDiag() {
 }
 
 async function addImpulses(impulseInputVal, turnId) {
+  if(impulseInputVal === 0) {
+    game.combat.startCombat();
+    return;
+  }
   var turn;
   var i;
   for(i = 0; i < game.combat.turns.length; i++) {
@@ -197,7 +191,6 @@ async function addImpulses(impulseInputVal, turnId) {
 
   await game.combat.setInitiative(turn._id, calcNewInit(turn._id, (turnInit - impulseInputVal)));
   game.combat.startCombat();
-  document.getElementById("altinitdialog").remove();
   //game.combat -- active
   //game.combats -- collection
 }

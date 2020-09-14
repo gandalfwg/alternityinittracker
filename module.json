@@ -3,7 +3,7 @@
 	"title": "Alternity Initiative Tracker",
 	"description": "A simple module for tracking initiative for the Alternity system.",
 	"author": "Gandalfwg",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"minimumCoreVersion": "0.5.0",
 	"scripts": [ "./scripts/main.js" ],
 	"styles": [ "./styles/style.css" ],
