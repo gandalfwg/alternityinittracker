@@ -18,9 +18,9 @@ Hooks.on("updateCombatant", (combat, combatant, update, userId) => {
   const initUpdate = !!getProperty(update, "initiative");
 
   if(initUpdate && combatant.initiative >= 1) {
-    //game.combat.setInitiative(update._id, calcNewInit(update._id, -1));
-    game.combat.setInitiative(update._id, 0);
-    createNextTurnDialog(update._id);
+    //game.combat.setInitiative(update.id, calcNewInit(update.id, -1));
+    game.combat.setInitiative(update.id, 0);
+    createNextTurnDialog(update.id);
   }
 });
 
@@ -44,7 +44,7 @@ Hooks.on("updateCombat", async (combat, update, options, userId) => {
     if(document.getElementsByClassName("app window-app dialog") && document.getElementsByClassName("app window-app dialog").length > 0) {
       return;
     }
-    await createNextTurnDialog(game.combat.turns[updateTurn]._id);
+    await createNextTurnDialog(game.combat.turns[updateTurn].id);
     var currTurn = game.combat.turns[update.turn];
     var currInit = parseFloat(currTurn.initiative);
     if(currInit < -8) {
@@ -53,7 +53,7 @@ Hooks.on("updateCombat", async (combat, update, options, userId) => {
       for(i = 0; i < game.combat.turns.length; i++) {
         var turnInit = parseFloat(game.combat.turns[i].initiative);
         if(turnInit <= -8) {
-          longTurns.push(game.combat.turns[i]._id);
+          longTurns.push(game.combat.turns[i].id);
         }
       }
       if(longTurns.length < game.combat.turns.length) {
@@ -63,7 +63,7 @@ Hooks.on("updateCombat", async (combat, update, options, userId) => {
         var j;
         var longInit = -1;
         for(j = 0; j < game.combat.turns.length; j++) {
-          if(game.combat.turns[j]._id == val) {
+          if(game.combat.turns[j].id == val) {
             longInit = parseFloat(game.combat.turns[j].initiative) + 8;
             break;
           }
@@ -86,7 +86,7 @@ function calcNewInit(id, init) {
   var ceilInit = Math.ceil(init);
   var i;
   for(i = 0; i < game.combat.turns.length; i++) {
-    if(game.combat.turns[i]._id == id) {
+    if(game.combat.turns[i].id == id) {
       continue;
     }
     var turnInit = parseFloat(game.combat.turns[i].initiative);
@@ -179,17 +179,20 @@ async function addImpulses(impulseInputVal, turnId) {
   var turn;
   var i;
   for(i = 0; i < game.combat.turns.length; i++) {
-    if(game.combat.turns[i]._id == turnId) {
+    if(game.combat.turns[i].id == turnId) {
       turn = game.combat.turns[i];
       break;
     }
   }
   console.log("Impulses to add: " + impulseInputVal + " to " + turn.name);
   var turnInit = turn.initiative;
+  if(turnInit > 0) {
+    turnInit = 0;
+  }
   turnInit = parseFloat(turnInit);
   impulseInputVal = parseFloat(impulseInputVal);
 
-  await game.combat.setInitiative(turn._id, calcNewInit(turn._id, (turnInit - impulseInputVal)));
+  await game.combat.setInitiative(turn.id, calcNewInit(turn.id, (turnInit - impulseInputVal)));
   game.combat.startCombat();
   //game.combat -- active
   //game.combats -- collection
